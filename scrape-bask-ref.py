@@ -26,7 +26,7 @@ for line in hof_prob_table('td'):
 
 
 all_seasons = []        
-for player in player_list[:20]:
+for player in player_list:
     print(player)
     reference_site = 'https://www.basketball-reference.com'
     page = urllib.request.urlopen(reference_site + player[1])
