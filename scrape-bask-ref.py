@@ -47,11 +47,11 @@ for player in player_list[:10]:
 
     # Create list of individual season stats lists
     player_career = [['player', 'href', 'height'] + categories]
-    season = [player[0], player[1], height]
+    season = [str(player[0]), player[1], str(height)]
     for value in values:
-        season.append(value)
+        season.append(str(value))
         #added and (season[3] != None)
-        if (len(season) == length+3) and (season[4] != None):
+        if (len(season) == length+3) and (season[4] != 'None'):
             player_career.append(season)
             season = [player[0], player[1], height]
         # Player must have played at least 12 seasons
@@ -70,6 +70,7 @@ for ind, lab in enumerate(['Player', 'href', 'Height', 'Season', 'Age', 'Tm', 'L
         cat_dict = {lab:ind}    
         master_cat_dict_ls.append(cat_dict)     
         
+test_careers = all_seasons[:4]
 for career in test_careers:
     labels = career[0]
     for season in career[0:]:
