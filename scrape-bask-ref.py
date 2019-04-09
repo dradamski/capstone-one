@@ -21,7 +21,7 @@ for line in hof_prob_table('td'):
         
 
 all_seasons = [] 
-for player in player_list:
+for player in player_list[:10]:
     reference_site = 'https://www.basketball-reference.com'
     page = urllib.request.urlopen(reference_site + player[1])
     #Parse the html in the 'page' variable and store it in Beautiful Soup format
@@ -55,7 +55,23 @@ for player in player_list:
             player_career.append(season)
             season = [player[0], player[1], height]
         # Player must have played at least 12 seasons
-    if (len(player_career) > 12) and (len(player_career[0]) == 33):
+    if (len(player_career) > 12):# and (len(player_career[0]) == 33):
         all_seasons.append(player_career)
         print(str((len(player_career)-1)), ' seasons of ', player[0], 'added')
+
+
+
+# Create pandas DataFrame of all data
+master_cat_dict_ls = []
+for ind, lab in enumerate(['Player', 'href', 'Height', 'Season', 'Age', 'Tm', 'Lg', 'Pos', 'G',
+                           'GS', 'MP', 'FG', 'FGA', 'FG%', '3P', '3PA', '3P%', '2P', '2PA', '2PA%',
+                           'eFG%', 'FT', 'FTA', 'FT%', 'ORB', 'DRB', 'TRB', 'AST', 'STL', 'BLK', 'TOV',
+                           'PF', 'PTS']):
+        cat_dict = {lab:ind}    
+        master_cat_dict_ls.append(cat_dict)     
         
+for career in test_careers:
+    labels = career[0]
+    for season in career[0:]:
+        for num, cat in enumerate(season):
+            print(labels[num], cat)
