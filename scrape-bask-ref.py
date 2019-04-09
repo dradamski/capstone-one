@@ -15,7 +15,7 @@ hof_prob_table = soup.table
 player_list = []
 for line in hof_prob_table('td'):
     try:
-        player_list.append((line.a.string, line.a.get('href')))
+        player_list.append((str(line.a.string), str(line.a.get('href'))))
     except:
         print('could not do it for', line)
         
@@ -28,7 +28,7 @@ for player in player_list[:10]:
     soup = BeautifulSoup(page, 'lxml')
     # Assign 
     per_game_table = soup.table
-    height = soup.find_all('div', {'id':'info'})[0].find_all('span', {'itemprop':'height'})[0].string
+    height = str(soup.find_all('div', {'id':'info'})[0].find_all('span', {'itemprop':'height'})[0].string)
 
     # this gets category values for a single season and makes a single list
     values = []
@@ -40,14 +40,14 @@ for player in player_list[:10]:
             if column.string == 'PTS':
                 length = int((num+1) / 2)
             if column != '\n':
-                values.append(column.string)        
+                values.append(str(column.string))
     categories = values[:length]
     # Ignores category names
     values = values[length:]
 
     # Create list of individual season stats lists
-    player_career = [['player', 'href', 'height'] + categories]
-    season = [str(player[0]), player[1], str(height)]
+    player_career = [['Player', 'href', 'Height'] + categories]
+    season = [player[0], player[1], height]
     for value in values:
         season.append(str(value))
         #added and (season[3] != None)
@@ -76,3 +76,12 @@ for career in test_careers:
     for season in career[0:]:
         for num, cat in enumerate(season):
             print(labels[num], cat)
+            
+            
+# does not work
+#for career in test_careers[0]:
+#    labels=career[0]
+#    career_df = pd.DataFrame(columns=labels)
+#    for season in career[0:]:
+#        season= pd.Series(data=season)
+#        pd.concat([career_df, season], ignore_index=True, join='outer')
