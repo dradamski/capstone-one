@@ -1,10 +1,6 @@
 from bs4 import BeautifulSoup
-from collections import defaultdict, OrderedDict, namedtuple
-import matplotlib.pyplot as plt
 import pandas as pd
-import sqlite3
-import urllib.request       # Determine whether urllib, urllib2, or requests is best option
-
+import urllib.request
 
 # Access Basketball Reference to get league leaders in win shares for each season
 #specify the url
@@ -22,16 +18,15 @@ for line in hof_prob_table('td'):
         player_list.append((line.a.string, line.a.get('href')))
     except:
         print('could not do it for', line)
+        
 
-
-
-all_seasons = []        
+all_seasons = [] 
 for player in player_list:
-    print(player)
     reference_site = 'https://www.basketball-reference.com'
     page = urllib.request.urlopen(reference_site + player[1])
     #Parse the html in the 'page' variable and store it in Beautiful Soup format
     soup = BeautifulSoup(page, 'lxml')
+    # Assign 
     per_game_table = soup.table
     height = soup.find_all('div', {'id':'info'})[0].find_all('span', {'itemprop':'height'})[0].string
 
@@ -59,6 +54,8 @@ for player in player_list:
         if (len(season) == length+3) and (season[4] != None):
             player_career.append(season)
             season = [player[0], player[1], height]
-    all_seasons.append(player_career)
-    print(str(len(player_career)), ' seasons of ', player[0], 'added')
-    
+        # Player must have played at least 12 seasons
+    if (len(player_career) > 12) and (len(player_career[0]) == 33):
+        all_seasons.append(player_career)
+        print(str((len(player_career)-1)), ' seasons of ', player[0], 'added')
+        
