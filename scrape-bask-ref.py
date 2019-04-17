@@ -21,7 +21,7 @@ for line in hof_prob_table('td'):
         
 
 all_seasons = [] 
-for player in player_list[:10]:
+for player in player_list:
     reference_site = 'https://www.basketball-reference.com'
     page = urllib.request.urlopen(reference_site + player[1])
     #Parse the html in the 'page' variable and store it in Beautiful Soup format
@@ -49,6 +49,9 @@ for player in player_list[:10]:
     player_career = [['Player', 'href', 'Height'] + categories]
     season = [player[0], player[1], height]
     for value in values:
+        if value.startswith('Did'):
+            # Find players who took time off mid-career
+            print(player[0], value)
         season.append(str(value))
         #added and (season[3] != None)
         if (len(season) == length+3) and (season[4] != 'None'):
@@ -62,26 +65,28 @@ for player in player_list[:10]:
 
 
 # Create pandas DataFrame of all data
-master_cat_dict_ls = []
-for ind, lab in enumerate(['Player', 'href', 'Height', 'Season', 'Age', 'Tm', 'Lg', 'Pos', 'G',
-                           'GS', 'MP', 'FG', 'FGA', 'FG%', '3P', '3PA', '3P%', '2P', '2PA', '2PA%',
-                           'eFG%', 'FT', 'FTA', 'FT%', 'ORB', 'DRB', 'TRB', 'AST', 'STL', 'BLK', 'TOV',
-                           'PF', 'PTS']):
-        cat_dict = {lab:ind}    
-        master_cat_dict_ls.append(cat_dict)     
-        
-test_careers = all_seasons[:4]
-for career in test_careers:
-    labels = career[0]
-    for season in career[0:]:
-        for num, cat in enumerate(season):
-            print(labels[num], cat)
-            
-            
-# does not work
-#for career in test_careers[0]:
-#    labels=career[0]
-#    career_df = pd.DataFrame(columns=labels)
+category_list= ['Player', 'href', 'Height', 'Season', 'Age', 'Tm', 'Lg', 
+                'Pos', 'G', 'GS', 'MP', 'FG', 'FGA', 'FG%', '3P', '3PA', 
+                '3P%', '2P', '2PA', '2P%', 'eFG%', 'FT', 'FTA', 'FT%', 
+                'ORB', 'DRB', 'TRB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS'
+                ]
+#test_careers = all_seasons[:4]
+#for career in test_careers:
+#    labels = career[0]
 #    for season in career[0:]:
-#        season= pd.Series(data=season)
-#        pd.concat([career_df, season], ignore_index=True, join='outer')
+#        for num, cat in enumerate(season):
+#            print(labels[num], cat)
+            
+            
+# CREATE LIST OF DATAFRAMES AND MERGE AT END
+df_list = []
+season_df_list = []
+master_df = pd.DataFrame(columns=category_list)
+for career in all_seasons:
+    labels=career[0]
+    for season in career[1:]:
+        season= pd.DataFrame(data=season, index=labels)
+        season_df_list.append(season.transpose())
+    career_df = pd.concat(season_df_list, ignore_index=True)
+
+career_df.to_csv('all-stats-messy.csv')
