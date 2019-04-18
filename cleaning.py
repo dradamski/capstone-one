@@ -59,6 +59,8 @@ for col in df.columns:
 # of Age vs. Column
     
 def graph_column(col_name):
+    '''Graphs the mean, lower quantile, upper quantile, minimum, and maximum
+    values for a column'''
     ages = range(18,44)
     
     means = []
@@ -77,11 +79,31 @@ def graph_column(col_name):
     plt.plot(ages, top)
     plt.plot(ages, maxi)
     plt.plot(ages, mini)
+    plt.title(col_name)
     return plt.show()
     
 for column in df.columns:
     if (np.dtype(df[column]) == np.float64) and column != 'Age':
         graph_column(column)
+
+# Add All Star category
+allstar= {'allstar':[]}
+for i, row in df.iterrows():
+    try:
+        len(row['Season'])
+        allstar['allstar'].append(0)
+    except:
+        allstar['allstar'].append(1)
+df['allstar'] = allstar['allstar']
+
+# Copmpare all stars to overall average
+for col in df.columns:
+    if np.dtype(df[col]) == np.float64:
+        print(col, df[df['allstar'] == 1][col].mean(), df[col].mean())
+
+for col in df.columns:
+    if np.dtype(df[col]) == np.float64:
+        print(col, df[df['allstar'] == 1][col].mean() - df[col].mean())
 
 
 
