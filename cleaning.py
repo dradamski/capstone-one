@@ -19,7 +19,7 @@ col_names = list(df.columns)
 # This is done by systematically going through and checking Basketball
 # Reference and adjusting their stats accordingly.
 # List of players who have gaps in their careers
-probplayers = ['Michael Jordan', 'Bob Cousy' 'Magic Johnson', 'Paul Arizin',
+probplayers = ['Michael Jordan', 'Bob Cousy', 'Magic Johnson', 'Paul Arizin',
                'George Mikan', 'Rick Barry', 'Dave Cowens', 
                'Tiny Archibald', 'Dominique Wilkins', 'Alonzo Mourning',
                'Grant Hill', 'Tim Hardaway', 'Richie Guerin', 'Larry Costello',
@@ -43,7 +43,7 @@ for ind, player in df.iterrows():
 for i in probrows:
     df = df.drop(index=i)
 # Removes Magic Johnson season that survived initial filtering.
-df = df.drop(index=[237,236,185])
+#df = df.drop(index=[237,236,185])
 
 df = df.replace('None', np.nan)
 
@@ -51,6 +51,44 @@ for col in df.columns:
     df[col] = pd.to_numeric(df[col], errors='ignore')
 
 
-#print(df[df['Age'] == 40.0]['PTS'].mean())
+#for i in range(18, 44):
+ #   age_dict[i] = df[df['Age'] == i]['PTS'].mean()
+
+
+# Write a function that takes column and spits out graph
+# of Age vs. Column
+    
+def graph_column(col_name):
+    ages = range(18,44)
+    
+    means = []
+    lower=[]
+    top=[]
+    maxi=[]
+    mini=[]
+    for age in ages:
+        means.append(df[df['Age'] == age][col_name].mean())
+        lower.append(df[df['Age'] == age][col_name].quantile(.25))
+        top.append(df[df['Age'] == age][col_name].quantile(.75))
+        maxi.append(df[df['Age'] == age][col_name].max())
+        mini.append(df[df['Age'] == age][col_name].min())
+    plt.plot(ages, means)
+    plt.plot(ages, lower)
+    plt.plot(ages, top)
+    plt.plot(ages, maxi)
+    plt.plot(ages, mini)
+    return plt.show()
+    
+for column in df.columns:
+    if (np.dtype(df[column]) == np.float64) and column != 'Age':
+        graph_column(column)
+
+
+
+
+
+
+
+
 
 
