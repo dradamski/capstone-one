@@ -9,16 +9,26 @@ site = "https://www.basketball-reference.com/leaders/hof_prob.html"
 page = urllib.request.urlopen(site)
 #Parse the html in the 'page' variable and store it in Beautiful Soup format
 soup = BeautifulSoup(page, 'lxml')
-hof_prob_table = soup.table
-
+hof_prob_table = soup.find_all('table')[0]
+active_prob_table = soup.find_all('table')[1]
 #create list tuples of players and href 
 player_list = []
+active_player_list = []
 for line in hof_prob_table('td'):
     try:
         player_list.append((str(line.a.string), str(line.a.get('href'))))
     except:
         print('could not do it for', line)
         
+for line in active_prob_table('td'):
+    try:
+        active_player_list.append((str(line.a.string), str(line.a.get('href'))))
+    except:
+        print('could not do it for', line)
+
+for player in active_player_list:
+    if player not in player_list:
+        player_list.append(player)
 
 all_seasons = [] 
 for player in player_list:
@@ -29,7 +39,7 @@ for player in player_list:
     # Assign 
     per_game_table = soup.table
     height = str(soup.find_all('div', {'id':'info'})[0].find_all('span', {'itemprop':'height'})[0].string)
-
+    
     # this gets category values for a single season and makes a single list
     values = []
     length = 0
