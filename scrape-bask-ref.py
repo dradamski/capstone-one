@@ -99,4 +99,4 @@ for career in all_seasons:
         season_df_list.append(season.transpose())
     career_df = pd.concat(season_df_list, ignore_index=True)
 
-career_df.to_csv('all-stats-messy.csv')
+career_df.to_csv('all-stats-messy.csv', columns = category_list)
