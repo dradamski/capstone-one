@@ -31,9 +31,15 @@ df = df.replace('None', np.nan)
 for col in df.columns:
     df[col] = pd.to_numeric(df[col], errors='ignore')
 
-
-#for i in range(18, 44):
- #   age_dict[i] = df[df['Age'] == i]['PTS'].mean()
+# Add All Star category
+allstar= {'allstar':[]}
+for i, row in df.iterrows():
+    try:
+        len(row['Season'])
+        allstar['allstar'].append(0)
+    except:
+        allstar['allstar'].append(1)
+df['allstar'] = allstar['allstar']
 
 
 # Write a function that takes column and spits out graph
@@ -47,19 +53,19 @@ def graph_column(col_name):
     means = []
     lower=[]
     top=[]
-    maxi=[]
-    mini=[]
+    #maxi=[]
+    #mini=[]
     for age in ages:
         means.append(df[df['Age'] == age][col_name].mean())
         lower.append(df[df['Age'] == age][col_name].quantile(.25))
         top.append(df[df['Age'] == age][col_name].quantile(.75))
-        maxi.append(df[df['Age'] == age][col_name].max())
-        mini.append(df[df['Age'] == age][col_name].min())
+        #maxi.append(df[df['Age'] == age][col_name].max())
+        #mini.append(df[df['Age'] == age][col_name].min())
     plt.plot(ages, means)
     plt.plot(ages, lower)
     plt.plot(ages, top)
-    plt.plot(ages, maxi)
-    plt.plot(ages, mini)
+    #plt.plot(ages, maxi)
+    #plt.plot(ages, mini)
     plt.title(col_name)
     return plt.show()
     
@@ -67,15 +73,7 @@ for column in df.columns:
     if (np.dtype(df[column]) == np.float64) and column != 'Age':
         graph_column(column)
 
-# Add All Star category
-allstar= {'allstar':[]}
-for i, row in df.iterrows():
-    try:
-        len(row['Season'])
-        allstar['allstar'].append(0)
-    except:
-        allstar['allstar'].append(1)
-df['allstar'] = allstar['allstar']
+
 
 # Copmpare all stars to overall average
 for col in df.columns:

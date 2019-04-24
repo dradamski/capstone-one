@@ -68,9 +68,9 @@ for player in player_list:
             player_career.append(season)
             season = [player[0], player[1], height]
         # Player must have played at least 12 seasons
-    if (len(player_career) > 12):# and (len(player_career[0]) == 33):
-        all_seasons.append(player_career)
-        print(str((len(player_career)-1)), ' seasons of ', player[0], 'added')
+    #if (len(player_career) > 12):# and (len(player_career[0]) == 33):
+    all_seasons.append(player_career)
+    print(str((len(player_career)-1)), ' seasons of ', player[0], 'added')
 
 
 
@@ -80,12 +80,7 @@ category_list= ['Player', 'href', 'Height', 'Season', 'Age', 'Tm', 'Lg',
                 '3P%', '2P', '2PA', '2P%', 'eFG%', 'FT', 'FTA', 'FT%', 
                 'ORB', 'DRB', 'TRB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS'
                 ]
-#test_careers = all_seasons[:4]
-#for career in test_careers:
-#    labels = career[0]
-#    for season in career[0:]:
-#        for num, cat in enumerate(season):
-#            print(labels[num], cat)
+
             
             
 # CREATE LIST OF DATAFRAMES AND MERGE AT END
@@ -95,8 +90,10 @@ master_df = pd.DataFrame(columns=category_list)
 for career in all_seasons:
     labels=career[0]
     for season in career[1:]:
-        season= pd.DataFrame(data=season, index=labels)
-        season_df_list.append(season.transpose())
-    career_df = pd.concat(season_df_list, ignore_index=True)
+        season_df = pd.DataFrame(data=season, index=labels)
+        season_df_list.append(season_df.transpose())
+        print(career[1][0] + ' added')
+career_df = pd.concat(season_df_list, ignore_index=True)
+    
 
 career_df.to_csv('all-stats-messy.csv', columns = category_list)
