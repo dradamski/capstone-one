@@ -11,38 +11,46 @@ page = urllib.request.urlopen(site)
 soup = BeautifulSoup(page, 'lxml')
 
 # Save two Hall of Fame Probability leader tables (all time and active)
-hof_prob_table = soup.find_all('table')[0]
-active_prob_table = soup.find_all('table')[1]
-#create list tuples of players and href 
+alltime_table, active_table = soup.find_all('table')
+
+#create list of tuples containgin player name and player page link 
 alltime_list = []
 active_list = []
-for line in hof_prob_table('td'):
+for line in alltime_table('td'):
     try:
         alltime_list.append((str(line.a.string), str(line.a.get('href'))))
     except:
         print('could not do it for', line)
         
-for line in active_prob_table('td'):
+for line in active_table('td'):
     try:
         active_list.append((str(line.a.string), str(line.a.get('href'))))
     except:
         print('could not do it for', line)
 
-for player in active_list:
-    if player not in alltime_list:
-        alltime_list.append(player)
+# Create list of players on active_list but not alltime_list
+# and add to alltime_list
+active_list = list(set(active_list).difference(set(alltime_list)))
+alltime_list += active_list
 
+
+# This for loop gets the season by season stats for each player in the 
+# alltime_list. First it turns the player page html into a Beautiful Soup
+# object to make the stats table. I also pull the player's height from
+# the top of the page, and convert it from a string 'x-xx' to inches.
 all_seasons = [] 
 for player in alltime_list:
-    reference_site = 'https://www.basketball-reference.com'
-    page = urllib.request.urlopen(reference_site + player[1])
-    #Parse the html in the 'page' variable and store it in Beautiful Soup format
+    reference_site = 'https://www.basketball-reference.com' + player[1]
+    page = urllib.request.urlopen(reference_site)
     soup = BeautifulSoup(page, 'lxml')
-    # Assign 
     per_game_table = soup.table
-    height = str(soup.find_all('div', {'id':'info'})[0].find_all('span', {'itemprop':'height'})[0].string)
     
-    # this gets category values for a single season and makes a single list
+    height_str = str(soup.find_all('div', {'id':'info'})[0].find_all('span', {'itemprop':'height'})[0].string)
+    height = height_str.split('-')
+    height = int(height[0])*12 + int(height[1])
+    
+    # This section gets stats values for a single season and 
+    # makes a single list
     values = []
     length = 0
     for row in (per_game_table('tr')):
