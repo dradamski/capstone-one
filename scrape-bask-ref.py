@@ -9,29 +9,31 @@ site = "https://www.basketball-reference.com/leaders/hof_prob.html"
 page = urllib.request.urlopen(site)
 #Parse the html in the 'page' variable and store it in Beautiful Soup format
 soup = BeautifulSoup(page, 'lxml')
+
+# Save two Hall of Fame Probability leader tables (all time and active)
 hof_prob_table = soup.find_all('table')[0]
 active_prob_table = soup.find_all('table')[1]
 #create list tuples of players and href 
-player_list = []
-active_player_list = []
+alltime_list = []
+active_list = []
 for line in hof_prob_table('td'):
     try:
-        player_list.append((str(line.a.string), str(line.a.get('href'))))
+        alltime_list.append((str(line.a.string), str(line.a.get('href'))))
     except:
         print('could not do it for', line)
         
 for line in active_prob_table('td'):
     try:
-        active_player_list.append((str(line.a.string), str(line.a.get('href'))))
+        active_list.append((str(line.a.string), str(line.a.get('href'))))
     except:
         print('could not do it for', line)
 
-for player in active_player_list:
-    if player not in player_list:
-        player_list.append(player)
+for player in active_list:
+    if player not in alltime_list:
+        alltime_list.append(player)
 
 all_seasons = [] 
-for player in player_list:
+for player in alltime_list:
     reference_site = 'https://www.basketball-reference.com'
     page = urllib.request.urlopen(reference_site + player[1])
     #Parse the html in the 'page' variable and store it in Beautiful Soup format
