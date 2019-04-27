@@ -12,6 +12,18 @@ df = df.reset_index(drop=True)
 # programmatically, but the juice wasn't worth the squeeze.
 
 df = df.replace('None', np.nan)
+df.columns = df.columns.str.lower()
+# Fix heights column
+heights = []
+for ht in df.height:
+    if len(ht) > 2:
+        height = ht.split('-')
+        height = int(height[0])*12 + int(height[1])
+        heights.append(height)
+    else:
+        heights.append(ht)
+df.height = pd.DataFrame(heights)
+
 
 for col in df.columns:
     df[col] = pd.to_numeric(df[col], errors='ignore')
@@ -20,18 +32,16 @@ for col in df.columns:
 allstar= {'allstar':[]}
 for i, row in df.iterrows():
     try:
-        len(row['Season'])
+        len(row['season'])
         allstar['allstar'].append(0)
     except:
         allstar['allstar'].append(1)
 df['allstar'] = allstar['allstar']
 
-df.columns = df.columns.str.lower()
 
 # I will also need to deal with players who were traded mid season. I am going
 # to solely look at their totals over the course of the entire season
-iverson = df[df.player == 'Allen Iverson']
-new = iverson.loc[iverson.age.shift(-1) != iverson.age]
+df = df.loc[df.age.shift(1) != df.age]
 
 
 # Check to see if any traded players were all stars

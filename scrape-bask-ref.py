@@ -102,7 +102,6 @@ for career in all_seasons:
     for season in career[1:]:
         season_df = pd.DataFrame(data=season, index=labels)
         season_df_list.append(season_df.transpose())
-        print(career[1][0] + ' added')
 career_df = pd.concat(season_df_list, ignore_index=True)
     
 
