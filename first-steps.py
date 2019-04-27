@@ -7,7 +7,7 @@ Created on Thu Apr 25 22:05:19 2019
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
+from cleaning import df
 # Write a function that takes column and spits out graph
 # of Age vs. Column
   
