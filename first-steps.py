@@ -34,7 +34,12 @@ def graph_column(col_name):
     #plt.plot(ages, mini)
     plt.title(col_name)
     return plt.show()
-    
+
+
+
+
+
+
 for column in df.columns:
     if (np.dtype(df[column]) == np.float64) and column != 'age':
         graph_column(column)
@@ -59,5 +64,6 @@ for col in df.columns:
 # I am using min-max feature scaling normalization because
 # I want to compare player's stats relative to their apex.
 def normalize(ls):
+    '''Performs min-max feature scaling normalization on a sequence'''
     return [(num - min(ls))/(max(ls)-min(ls)) for num in ls]
         

@@ -46,7 +46,7 @@ df = df.loc[df.age.shift(1) != df.age]
 # Drop all rows with nan values to work with complete data
 # Start by dropping season values since NaN values mean a player
 # was an allstar
-nonan = df.drop('season')
+nonan = df.drop(columns='season')
 # Drop NaN values
 nonan = df.dropna()
 nonan[nonan['allstar']==1].describe() - nonan[nonan['allstar']==0].describe()
