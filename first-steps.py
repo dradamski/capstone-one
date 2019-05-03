@@ -56,11 +56,8 @@ for col in df.columns:
 
 
 
-
-def normalize(data, cat_list):
-    norm_dic = {}
-    for category in cat_list:
-        normed = (data[category]-data[category].mean()/(data[category].max()-data[category].min()))
-        norm_dic[category] = normed
-    
-    return norm_dic
+# I am using min-max feature scaling normalization because
+# I want to compare player's stats relative to their apex.
+def normalize(ls):
+    return [(num - min(ls))/(max(ls)-min(ls)) for num in ls]
+        

@@ -43,7 +43,17 @@ df['allstar'] = allstar['allstar']
 # to solely look at their totals over the course of the entire season
 df = df.loc[df.age.shift(1) != df.age]
 
+# Drop all rows with nan values to work with complete data
+# Start by dropping season values since NaN values mean a player
+# was an allstar
+nonan = df.drop('season')
+# Drop NaN values
+nonan = df.dropna()
+nonan[nonan['allstar']==1].describe() - nonan[nonan['allstar']==0].describe()
 
-# Check to see if any traded players were all stars
-# len(df[(df.tm == 'TOT') & (df.allstar == 1)])
-# Actually that doesnt matter
+
+
+
+
+
+
