@@ -23,6 +23,10 @@ for ht in df.height:
         heights.append(ht)
 df.height = pd.DataFrame(heights)
 
+# Converts seasons where a player is marked as playing to positions
+# to only the position they played most which is represented
+# first (SG-PG -> SG   C-PF -> C)
+df.pos = df.pos.replace('.+-.+', row.pos[:2] ,regex=True)
 
 for col in df.columns:
     df[col] = pd.to_numeric(df[col], errors='ignore')
