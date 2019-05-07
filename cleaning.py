@@ -3,7 +3,6 @@ import pandas as pd
 
 df = pd.read_csv('all-stats-clean.csv', header=0, index_col=0)
 
-df = df.reset_index(drop=True)
 # There are many instances of players who took seasons off due to injury/
 # health concerns, military service, or to play elsewhere. These instances 
 # screwed up the data scraping process so they require additional cleaning.
@@ -42,7 +41,7 @@ df['allstar'] = allstar['allstar']
 # I will also need to deal with players who were traded mid season. I am going
 # to solely look at their totals over the course of the entire season
 df = df.loc[df.age.shift(1) != df.age]
-
+df = df.reset_index(drop=True)
 # Drop all rows with nan values to work with complete data
 # Start by dropping season values since NaN values mean a player
 # was an allstar
