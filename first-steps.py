@@ -28,25 +28,41 @@ def graph_column(col_name):
         #maxi.append(df[df['Age'] == age][col_name].max())
         #mini.append(df[df['Age'] == age][col_name].min())
     plt.plot(ages, means)
-    plt.plot(ages, lower)
-    plt.plot(ages, top)
+    #plt.plot(ages, lower)
+    #plt.plot(ages, top)
     #plt.plot(ages, maxi)
     #plt.plot(ages, mini)
     plt.title(col_name)
     return plt.show()
 
+# create histograms of each stat at each age in order to see the progression
+# of stats over time
+stat_col = ['g', 'gs', 'mp', 'fg', 'fga', '3p', '3pa', '2p', '2pa', 'ft', 'fta',
+            'orb', 'drb', 'trb', 'ast', 'stl', 'blk', 'tov', 'pf', 'pts', 
+            'allstar'
+            ]
+
+
+for col in stat_col:
+    try:
+        ages = range(18,44)
+        for age in ages:
+            pts = df.loc[df['age']==age][col]
+            plt.hist(pts, bins=15, range = [0, max(df[col])])
+            plt.title(col + ' at age ' + str(age))
+            plt.show()
+    except:
+        print(col)
 
 
 
-
-
-for column in df.columns:
-    if (np.dtype(df[column]) == np.float64) and column != 'age':
-        graph_column(column)
+#for column in df.columns:
+#    if (np.dtype(df[column]) == np.float64) and column != 'age':
+#        graph_column(column)
 
 
 
-# Copmpare all stars to overall average
+# Compare all stars to overall average
 for col in df.columns:
     if np.dtype(df[col]) == np.float64:
         print(col, df[df['allstar'] == 1][col].mean(), df[col].mean())
