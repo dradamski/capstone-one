@@ -15,18 +15,26 @@ df.columns = df.columns.str.lower()
 # Fix heights column
 heights = []
 for ht in df.height:
-    if len(ht) > 2:
+    try:
+        int(ht)
+        heights.append(ht)
+    except:
         height = ht.split('-')
         height = int(height[0])*12 + int(height[1])
         heights.append(height)
-    else:
-        heights.append(ht)
+    
 df.height = pd.DataFrame(heights)
 
 # Converts seasons where a player is marked as playing to positions
 # to only the position they played most which is represented
 # first (SG-PG -> SG   C-PF -> C)
-df.pos = df.pos.replace('.+-.+', row.pos[:2] ,regex=True)
+#df.pos = df.pos.replace('.+-.+', row.pos[:2] ,regex=True)
+def slice(string):
+    if type(string) ==str:
+        return string[:2]
+df.pos = df.pos.apply(slice)
+
+
 
 for col in df.columns:
     df[col] = pd.to_numeric(df[col], errors='ignore')
@@ -53,8 +61,6 @@ nonan = df.drop(columns='season')
 # Drop NaN values
 nonan = df.dropna()
 nonan[nonan['allstar']==1].describe() - nonan[nonan['allstar']==0].describe()
-
-
 
 
 
