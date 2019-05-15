@@ -37,9 +37,9 @@ def graph_column(col_name):
 
 # create histograms of each stat at each age in order to see the progression
 # of stats over time
-stat_col = ['g', 'gs', 'mp', 'fg', 'fga', '3p', '3pa', '2p', '2pa', 'ft', 'fta',
-            'orb', 'drb', 'trb', 'ast', 'stl', 'blk', 'tov', 'pf', 'pts', 
-            'allstar'
+stat_col = ['g', 'gs', 'mp', 'fg', 'fga', '3p', '3pa', '2p', '2pa', 
+            'ft', 'fta','orb', 'drb', 'trb', 'ast', 'stl', 'blk', 'tov',
+            'pf', 'pts', 'allstar'
             ]
 
 
