@@ -128,7 +128,10 @@ season_sum = pd.DataFrame({'season_sum':s})
 m = [row[2:].mean() for i, row in all_norm_df.iterrows()]
 season_mean = pd.DataFrame({'season_mean':m})
 
-new = pd.concat([all_norm_df[['player', 'years_in_league']], season_sum, season_mean], axis=1)
+
+statistic_df = pd.concat([all_norm_df[['player', 'years_in_league']],
+                          season_sum, season_mean], axis=1)
+
 
 
 
