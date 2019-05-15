@@ -130,7 +130,7 @@ all_norm_df['age'] = df['age']
 columns = ['player', 'age'] + list(all_norm_df.columns)
 all_norm_df = all_norm_df[columns]
 all_norm_df = all_norm_df.reset_index(drop=True)
-    
+
     
     
     

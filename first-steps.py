@@ -43,16 +43,16 @@ stat_col = ['g', 'gs', 'mp', 'fg', 'fga', '3p', '3pa', '2p', '2pa', 'ft', 'fta',
             ]
 
 
-for col in stat_col:
-    try:
-        ages = range(18,44)
-        for age in ages:
-            pts = df.loc[df['age']==age][col]
-            plt.hist(pts, bins=15, range = [0, max(df[col])])
-            plt.title(col + ' at age ' + str(age))
-            plt.show()
-    except:
-        print(col)
+#for col in stat_col:
+#    try:
+#        ages = range(18,44)
+#        for age in ages:
+#            pts = df.loc[df['age']==age][col]
+#            plt.hist(pts, bins=15, range = [0, max(df[col])])
+#            plt.title(col + ' at age ' + str(age))
+#            plt.show()
+#    except:
+#        print(col)
 
 
 
@@ -82,4 +82,51 @@ for col in df.columns:
 def normalize(ls):
     '''Performs min-max feature scaling normalization on a sequence'''
     return [(num - min(ls))/(max(ls)-min(ls)) for num in ls]
+        
+
+
+#Example of working through a player's normalized data
+allen = df.loc[df.player == 'Allen Iverson']
+alnorm = pd.DataFrame()
+for col in allen.columns:
+    try:
+        alnorm[col] = normalize(allen[col])
+    except:
+        print(col)
+for i, row in alnorm.iterrows():
+    print(i, sum(row))
+
+mj = df.loc[df.player == 'Michael Jordan']
+mjnorm = pd.DataFrame()
+for col in mj.columns:
+    try:
+        mjnorm[col] = normalize(mj[col])
+    except:
+        print(col)
+
+# input dataframe
+def create_ndf(data):
+    allnorm = pd.DataFrame()
+    # iterate through players
+    players = data.player.unique()
+    for player in players:
+        player_df = data.loc[data.player == player]
+        # iterate through each stat column
+        normplaydf = pd.DataFrame()
+        for col in player_df.columns:
+            #make sure  column datatype is consistent
+            if np.dtype(player_df[col]) == np.int64:
+                try:
+                # normalize each columns
+                    colnorm = normalize(player_df[col])
+                    normplaydf = pd.concat([normplaydf, pd.DataFrame(colnorm)],
+                                        ignore_index=True, axis=1)
+                except:
+                    pass
+                # concat into single player df
+                
+        # append to allnorm
+            allnorm=pd.concat([allnorm,normplaydf], ignore_index=True)
+    return allnorm
+
         
