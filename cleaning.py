@@ -12,18 +12,21 @@ df = pd.read_csv('all-stats-clean.csv', header=0, index_col=0)
 
 df = df.replace('None', np.nan)
 df.columns = df.columns.str.lower()
+
+
+
 # Fix heights column
-heights = []
-for ht in df.height:
-    try:
-        int(ht)
-        heights.append(ht)
-    except:
-        height = ht.split('-')
-        height = int(height[0])*12 + int(height[1])
-        heights.append(height)
+#heights = []
+#for ht in df.height:
+#    try:
+#        int(ht)
+#        heights.append(ht)
+#    except:
+#        height = ht.split('-')
+#        height = int(height[0])*12 + int(height[1])
+#        heights.append(height)
     
-df.height = pd.DataFrame(heights)
+#df.height = pd.DataFrame(heights)
 
 # Converts seasons where a player is marked as playing to positions
 # to only the position they played most which is represented
@@ -61,8 +64,5 @@ nonan = df.drop(columns='season')
 # Drop NaN values
 nonan = df.dropna()
 nonan[nonan['allstar']==1].describe() - nonan[nonan['allstar']==0].describe()
-
-
-
 
 
