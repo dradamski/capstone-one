@@ -110,13 +110,32 @@ for player in unique:
 
 #rearrange order of dataframe so name is first columns
 columns = list(all_norm_df.columns)
-columns.pop()
 columns = ['player', 'years_in_league'] + columns
+columns.pop(23)
+columns.pop()
 all_norm_df = all_norm_df[columns]
 all_norm_df = all_norm_df.reset_index(drop=True)
 
-    
-all_norm_df.sum()
+# Some stats are not positive indicators such as turnovers
+# so I want to subtract their values from the overall values
+all_norm_df.tov = -all_norm_df.tov
 
-    
+# create individual normalized season sum column
+s = [row[2:].sum() for i, row in all_norm_df.iterrows()]
+season_sum = pd.DataFrame({'season_sum':s})
+
+# create individual normalized season average column
+m = [row[2:].mean() for i, row in all_norm_df.iterrows()]
+season_mean = pd.DataFrame({'season_mean':m})
+
+new = pd.concat([all_norm_df[['player', 'years_in_league']], season_sum, season_mean], axis=1)
+
+
+
+
+
+
+
+
+
     
