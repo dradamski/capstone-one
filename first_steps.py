@@ -85,24 +85,7 @@ def normalize(ls):
         
 
 
-#Example of working through a player's normalized data
-allen = df.loc[df.player == 'Allen Iverson']
-alnorm = pd.DataFrame()
-for col in allen.columns:
-    try:
-        alnorm[col] = normalize(allen[col])
-    except:
-        print(col)
-for i, row in alnorm.iterrows():
-    print(i, sum(row))
 
-mj = df.loc[df.player == 'Michael Jordan']
-mjnorm = pd.DataFrame()
-for col in mj.columns:
-    try:
-        mjnorm[col] = normalize(mj[col])
-    except:
-        print(col)
 
 # create new dataframe with each players data normalized
 # against every season in their career
@@ -112,7 +95,8 @@ all_norm_df = pd.DataFrame()
 for player in unique:
     pnormdf = pd.DataFrame()
     playerdf = df[df['player'] == player]
-    for col in playerdf:
+    years_in_league = np.array(range(1, len(playerdf)+1))
+    for col in playerdf:    
         if playerdf[col].dtypes == np.float64:
             statdf = playerdf[col]
             try:
@@ -121,17 +105,18 @@ for player in unique:
             except:
                 pass
     pnormdf['player'] = player
+    pnormdf['years_in_league'] = years_in_league
     all_norm_df = pd.concat([all_norm_df, pnormdf])
 
-# add age columns
-all_norm_df['age'] = df['age']
-
 #rearrange order of dataframe so name is first columns
-columns = ['player', 'age'] + list(all_norm_df.columns)
+columns = list(all_norm_df.columns)
+columns.pop()
+columns = ['player', 'years_in_league'] + columns
 all_norm_df = all_norm_df[columns]
 all_norm_df = all_norm_df.reset_index(drop=True)
 
     
-    
+all_norm_df.sum()
+
     
     
