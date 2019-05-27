@@ -52,8 +52,42 @@ def fix_height(ht):
     new_ht = 12*int(ft) + int(inch)
     return(new_ht)
 
-height = df.height
-for i, h in enumerate(height):
+height = np.empty(len(df))
+for i, h in enumerate(df.height):
     if '-' in h:
         height[i] = fix_height(h)
+    else:
+        height[i] = h
 df.height = pd.to_numeric(height)
+
+# Looking through describe
+# pos has 6 unique values? TRUE PG, SG, SF, PF, C, nan
+# g max is 88 ACCURATE
+# fg and fga potentially have outliers
+# fgp max is 1.000 which does not make sense to include
+# threepa max doesnt make sense JUST JAMES HARDEN
+# threepp should be checked ADD SOMETHING THAT SAYS PLAYER HAS TO AVG  >.1
+# twopa and fga should be equal IF TWOPA == nan, TWOPA=FGA
+twopa = np.empty(len(df))
+twopp = np.empty(len(df))
+twop = np.empty(len(df))
+
+for i, t in enumerate(df.twop):
+    if np.isnan(t):
+        twop[i] = df.fg[i]
+        twopa[i] = df.fga[i]
+        twopp[i] = df.fgp[i]
+    else:
+        twop[i] = df.twop[i]
+        twopa[i] = df.twopa[i]
+        twopp[i] = df.twopp[i]
+df.twopa = twopa
+df.twopp = twopp
+df.twop = twop
+
+# twopp max is above 1
+# ftp is 736 FIXED
+# orb is 7.2 TRUE
+# drb is 13.7 TRUE
+# blk max is 5 TRUE
+#
