@@ -13,32 +13,19 @@ df = pd.read_csv('all-stats-clean.csv', header=0, index_col=0)
 df = df.replace('None', np.nan)
 df.columns = df.columns.str.lower()
 
+df.rename(columns={'fg%':'fgp','3p':'threep', '3pa':'threepa',
+                  '3p%':'threepp', '2p':'twop', '2pa':'twopa',
+                  '2p%':'twopp', 'efg%':'efgp', 'ft%':'ftp'}, inplace=True)
 
-
-# Fix heights column
-#heights = []
-#for ht in df.height:
-#    try:
-#        int(ht)
-#        heights.append(ht)
-#    except:
-#        height = ht.split('-')
-#        height = int(height[0])*12 + int(height[1])
-#        heights.append(height)
-    
-#df.height = pd.DataFrame(heights)
-
-# Converts seasons where a player is marked as playing to positions
-# to only the position they played most which is represented
-# first (SG-PG -> SG   C-PF -> C)
-#df.pos = df.pos.replace('.+-.+', row.pos[:2] ,regex=True)
+# Edit positions to only include position player play
 def slice(string):
-    if type(string) ==str:
+    if type(string) == str:
         return string[:2]
 df.pos = df.pos.apply(slice)
 
+    
 
-
+# Convert columns to number formats
 for col in df.columns:
     df[col] = pd.to_numeric(df[col], errors='ignore')
 
@@ -57,12 +44,16 @@ df['allstar'] = allstar['allstar']
 # to solely look at their totals over the course of the entire season
 df = df.loc[df.age.shift(1) != df.age]
 df = df.reset_index(drop=True)
-# Drop all rows with nan values to work with complete data
-# Start by dropping season values since NaN values mean a player
-# was an allstar
-nonan = df.drop(columns='season')
-# Drop NaN values
-nonan = df.dropna()
-nonan[nonan['allstar']==1].describe() - nonan[nonan['allstar']==0].describe()
 
 
+# Convert heights of players to inches
+def fix_height(ht):
+    ft, inch = ht.split('-')
+    new_ht = 12*int(ft) + int(inch)
+    return(new_ht)
+
+height = df.height
+for i, h in enumerate(height):
+    if '-' in h:
+        height[i] = fix_height(h)
+df.height = pd.to_numeric(height)
