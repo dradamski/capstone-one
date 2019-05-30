@@ -90,4 +90,17 @@ df.twop = twop
 # orb is 7.2 TRUE
 # drb is 13.7 TRUE
 # blk max is 5 TRUE
-#
+
+# Need to fix threepp for players who did not take 3's during 3pt era
+# see Dikembe Mutumbo
+threepp = np.empty(len(df))
+for i, row in df.iterrows():
+    if np.isnan(row.threepp) and not (np.isnan(row.threepa) and np.isnan(row.threep)) :
+        threepp[i] = 0
+    else:
+        threepp[i] = row.threepp
+        
+df.threepp = threepp        
+# Remove all rows without missing values
+df = df.drop(columns='season')
+df = df.dropna()
