@@ -10,7 +10,6 @@ import pandas as pd
 from cleaning import df
 # Write a function that takes column and spits out graph
 # of Age vs. Column
-  
 def graph_column(col_name):
     '''Graphs the mean, lower quantile, upper quantile, minimum, and maximum
     values for a column'''
@@ -37,41 +36,24 @@ def graph_column(col_name):
 
 # create histograms of each stat at each age in order to see the progression
 # of stats over time
-stat_col = ['g', 'gs', 'mp', 'fg', 'fga', '3p', '3pa', '2p', '2pa', 
-            'ft', 'fta','orb', 'drb', 'trb', 'ast', 'stl', 'blk', 'tov',
-            'pf', 'pts', 'allstar'
-            ]
+stat_col = ['height', 'age', 'pos', 'g', 'gs', 'mp',
+       'fg', 'fga', 'fgp', 'threep', 'threepa', 'threepp', 'twop', 'twopa',
+       'twopp', 'efgp', 'ft', 'fta', 'ftp', 'orb', 'drb', 'trb', 'ast', 'stl',
+       'blk', 'tov', 'pf', 'pts', 'allstar']
 
 
-#for col in stat_col:
-#    try:
-#        ages = range(18,44)
-#        for age in ages:
-#            pts = df.loc[df['age']==age][col]
-#            plt.hist(pts, bins=15, range = [0, max(df[col])])
-#            plt.title(col + ' at age ' + str(age))
-#            plt.show()
-#    except:
-#        print(col)
-
-
-
-#for column in df.columns:
-#    if (np.dtype(df[column]) == np.float64) and column != 'age':
-#        graph_column(column)
-
-
-
-# Compare all stars to overall average
-#for col in df.columns:
-#    if np.dtype(df[col]) == np.float64:
-#        print(col, df[df['allstar'] == 1][col].mean(), df[col].mean())
-
-#for col in df.columns:
-#    if np.dtype(df[col]) == np.float64:
-#        print(col, (df[df['allstar'] == 1][col].mean() - df[col].mean()))
-
-
+for col in stat_col:
+    try:
+        ages = [(18, 23), (23, 28), (28, 31), (31, 44)]
+        for age in ages:
+            stat = df[(df.age >= age[0]) & (df.age < age[1])]
+            stat = stat[col]
+            plt.hist(stat, bins=int(np.sqrt(len(stat))), range = [0, max(df[col])], normed=True)
+            title = '%s between ages %i and %i' % (col, age[0], age[1])
+            plt.title(title)
+            plt.show()
+    except:
+        print(col)
 
 
 
@@ -115,27 +97,6 @@ columns.pop(23)
 columns.pop()
 all_norm_df = all_norm_df[columns]
 all_norm_df = all_norm_df.reset_index(drop=True)
-
-# Some stats are not positive indicators such as turnovers
-# so I want to subtract their values from the overall values
-#all_norm_df.tov = -all_norm_df.tov
-
-# create individual normalized season sum column
-#s = [row[2:].sum() for i, row in all_norm_df.iterrows()]
-#season_sum = pd.DataFrame({'season_sum':s})
-
-# create individual normalized season average column
-#m = [row[2:].mean() for i, row in all_norm_df.iterrows()]
-#season_mean = pd.DataFrame({'season_mean':m})
-
-
-#statistic_df = pd.concat([all_norm_df[['player', 'years_in_league']],
-#                          season_sum, season_mean], axis=1)
-
-
-
-
-
 
 
 

@@ -104,3 +104,4 @@ df.threepp = threepp
 # Remove all rows without missing values
 df = df.drop(columns='season')
 df = df.dropna()
+df = df.reset_index(drop=True)
