@@ -40,6 +40,7 @@ for i, row in df.iterrows():
 df['allstar'] = allstar['allstar']
 
 
+
 # I will also need to deal with players who were traded mid season. I am going
 # to solely look at their totals over the course of the entire season
 df = df.loc[df.age.shift(1) != df.age]
@@ -101,7 +102,31 @@ for i, row in df.iterrows():
         threepp[i] = row.threepp
         
 df.threepp = threepp        
+
+
+# Add years in the league
+unique = df.player.unique()
+years_in_league = []
+for player in unique:
+    playerdf = df[df.player == player]
+    years_in_league += list(range(1, len(playerdf)+1))
+years_in_league = pd.DataFrame({'years_in_league':years_in_league})
+df['years_in_league'] = years_in_league
+
+
+
 # Remove all rows without missing values
 df = df.drop(columns='season')
 df = df.dropna()
 df = df.reset_index(drop=True)
+
+# Create column that states whether a player will be an allstar the following
+# year
+allstar_next = pd.DataFrame()
+for player in df.player.unique():
+    playdf = df[df.player == player]
+    playallstar_next = playdf.allstar[1:]
+    playallstar_next = pd.concat([playallstar_next, pd.Series([0])])
+    playallstar_next.index = playdf.index
+    allstar_next = pd.concat([allstar_next, playallstar_next])
+df['allstar_next'] = allstar_next
