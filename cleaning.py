@@ -115,6 +115,17 @@ df['years_in_league'] = years_in_league
 
 
 
+# Impute values
+from sklearn.impute import SimpleImputer
+
+for col in df:
+    if np.dtype(df[col]) != 'object':
+        col_arr = np.array(df[col]).reshape(-1,1)
+        imp = SimpleImputer(missing_values=np.nan, strategy='mean', 
+                            fill_value=True)
+        imp.fit(col_arr)
+        col_arr = imp.transform(col_arr)
+        df[col] = col_arr
 # Remove all rows without missing values
 df = df.drop(columns='season')
 df = df.dropna()
