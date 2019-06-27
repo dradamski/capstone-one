@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.impute import SimpleImputer
 
 df = pd.read_csv('all-stats-clean.csv', header=0, index_col=0)
 
@@ -115,23 +116,38 @@ years_in_league = pd.DataFrame({'years_in_league':years_in_league})
 df['years_in_league'] = years_in_league
 
 
+# Impute values using position based means
 
-# Impute values
-#from sklearn.impute import SimpleImputer
+pgdf = df[df.pos == 'PG']
+sgdf = df[df.pos == 'SG']
+sfdf = df[df.pos == 'SF']
+pfdf = df[df.pos == 'PF']
+cdf = df[df.pos == 'C']
 
-#for col in df:
-#    if np.dtype(df[col]) != 'object':
-#        col_arr = np.array(df[col]).reshape(-1,1)
-#        imp = SimpleImputer(missing_values=np.nan, strategy='mean', 
-#                            fill_value=True)
-#        imp.fit(col_arr)
-#        col_arr = imp.transform(col_arr)
-#        df[col] = col_arr
+positions = [pgdf, sgdf, sfdf, pfdf, cdf]
+
+def position_imputation(df):
+    for col in df:
+        if np.dtype(df[col]) != object:
+            col_ser = df[col]
+            indexes = df.index
+            col_arr = np.array(col_ser).reshape(-1,1)
+            
+            imp = SimpleImputer(missing_values=np.nan, strategy='mean',
+                               fill_value=True)
+            col_arr = imp.fit_transform(col_arr)
+            col_df = pd.DataFrame(col_arr, index=indexes)
+            df[col] = col_df
+    return df
+
+for position in positions:
+    position = position_imputation(position)
+
+df = pd.concat(positions).sort_index()
 
 # Remove all rows without missing values
 df = df.drop(columns='season')
-df = df.dropna()
-df = df.reset_index(drop=True)
+
 
 # Create column that states whether a player will be an allstar the following
 # year
@@ -143,3 +159,6 @@ for player in df.player.unique():
     playallstar_next.index = playdf.index
     allstar_next = pd.concat([allstar_next, playallstar_next])
 df['allstar_next'] = allstar_next
+
+df = df.dropna()
+df = df.reset_index(drop=True)
