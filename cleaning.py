@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.impute import SimpleImputer
 
+pd.set_option('mode.chained_assignment', None)
 df = pd.read_csv('all-stats-clean.csv', header=0, index_col=0)
 
 # There are many instances of players who took seasons off due to injury/
